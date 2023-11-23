@@ -1,7 +1,7 @@
-import {Transaction} from '../entities/Transaction'
+import { Prisma, Transaction } from "@prisma/client";
 
 export interface TransactionRepository{
-  create(transaction: Transaction ): Promise<void>;
-  findTransactionById(id: string):Promise<Transaction>;
-  findTransactions():Promise<Transaction[]>;
+  create(transaction: Prisma.TransactionCreateInput ): Promise<Transaction>;
+  findTransactionById(id: string):Promise<Transaction | null>;
+  findAll():Promise<Transaction[] | null>;
 }

@@ -1,25 +1,33 @@
-// import { Transaction } from "../entities/Transaction";
+import { Transaction } from "@prisma/client";
+import { TransactionRepository } from "../repositories/TransactionRepository";
+import { UserRepository } from "../repositories/UserRepository";
 
-// interface CreateTransactionRequest{
-//   id:string;
-//   from: number;
-//   to: number;
-//   value: number;
-//   timestamp: Date;
-// }
+interface CreateTransactionUseCaseRequest{
+  from: string;
+  to:string;
+  value: number;
+}
 
-// type CreateTransactionResponse = Transaction;
+type CreateTransactionUseCaseResponse = Transaction
+export class CreateTransactionUseCase{
+  constructor(private transactionRepository: TransactionRepository, private usersRepository: UserRepository){}
 
-// export class CreateTransaction{
-//   async execute({id,from,to,value,timestamp}: CreateTransactionRequest): Promise<CreateTransactionResponse>{ 
-//     const transaction = new Transaction({
-//       id,
-//       from,
-//       to,
-//       value,
-//       timestamp
-//     });
 
-//     return transaction
-//   }
-// } 
+  async execute({from,to,value}: CreateTransactionUseCaseRequest): Promise<CreateTransactionUseCaseResponse>{
+    
+    const findByCPFFrom = await this.usersRepository.findByCPF(from)
+    const findByCPFTo = await this.usersRepository.findByCPF(to);
+   
+    if(!findByCPFFrom || !findByCPFTo){
+      throw new Error("Usuario Inexistente")
+    }
+   
+    const createTransaction = this.transactionRepository.create({
+      from,
+      to,
+      value,
+    });
+    
+    return createTransaction;
+  }
+} 

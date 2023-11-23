@@ -1,4 +1,4 @@
-import { User } from "../entities/User";
+import { User } from "@prisma/client";
 import { UserRepository } from "../repositories/UserRepository";
 
 interface CreateUserRequest{
@@ -12,6 +12,7 @@ type CreateUserResponse = User ;
  
 export class CreateUser{
   constructor(private userRepository: UserRepository) {}
+  
   async execute({cpf, name}: CreateUserRequest): Promise<CreateUserResponse>{
     
     const existingUser = await this.userRepository.findByCPF(cpf);
@@ -21,8 +22,11 @@ export class CreateUser{
     }
 
     // Criar um novo usuário
-    const newUser = User.create({ name, cpf });
-    const createdUser = await this.userRepository.create(newUser);
+    const createdUser = await this.userRepository.create({
+      name,
+      cpf
+    });
+    
     return createdUser;
   }
 }
