@@ -41,7 +41,7 @@ model tb_account_bank {
   value Int
 
   user   tb_users @relation(fields: [userId], references: [id])
-  userId String   @default("bank-id-fixed")
+  userId String   @unique @default("bank-id-fixed")
 }
 
 model tb_bank {

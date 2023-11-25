@@ -1,8 +1,8 @@
-import { User } from "@prisma/client";
+import { tb_users } from "@prisma/client";
 import { UserRepository } from "../repositories/UserRepository";
 
 interface SearchUsersResponse{
-  users: User[]
+  users: tb_users[]
 }
 export class SearchUsers{
   constructor(private userRepository: UserRepository){}

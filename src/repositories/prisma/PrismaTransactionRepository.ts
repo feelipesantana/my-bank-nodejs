@@ -6,9 +6,6 @@ export class PrismaTransactionRepository implements TransactionRepository{
   
   async create({fromId, toId, value}: Prisma.tb_transactionsCreateInput ): Promise<tb_transactions>{
     
-
-    console.log(fromId,toId,value)
-    
       const createTransaction = await prisma.tb_transactions.create({
       data:{
         fromId,
