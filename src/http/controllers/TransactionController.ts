@@ -5,18 +5,18 @@ import { makeCreateTransactionUseCase } from "../../use-cases/factory/make-trans
 export async function TransactionController(request: FastifyRequest, reply:FastifyReply){
 
   const registerTransactionBodySchema = z.object({
-    from: z.string(),
-    to: z.string(),
+    fromId: z.string(),
+    toId: z.string(),
     value: z.number()
   });
 
-  const {from, to, value} = registerTransactionBodySchema.parse(request.body);
+  const {fromId, toId, value} = registerTransactionBodySchema.parse(request.body);
 
   try{
 
     const makeTransaction =  makeCreateTransactionUseCase();
 
-    const newTransaction =  await makeTransaction.execute({from, to, value});
+    const newTransaction =  await makeTransaction.execute({fromId, toId, value});
   
     return reply.status(201).send(newTransaction) 
   

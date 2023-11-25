@@ -1,23 +1,27 @@
-import { Transaction } from "@prisma/client";
+import { Prisma, tb_transactions } from "@prisma/client";
 import { prisma } from "../../lib/prima";
 import { TransactionRepository } from "../TransactionRepository";
 
 export class PrismaTransactionRepository implements TransactionRepository{
   
-  async create(transaction:Transaction): Promise<Transaction>{
-      const createTransaction = await prisma.transaction.create({
-        data: {
-          from: transaction.from,
-          to: transaction.to,
-          value: transaction.value
-        }
-      })
+  async create({fromId, toId, value}: Prisma.tb_transactionsCreateInput ): Promise<tb_transactions>{
+    
 
-      return createTransaction
+    console.log(fromId,toId,value)
+    
+      const createTransaction = await prisma.tb_transactions.create({
+      data:{
+        fromId,
+        toId,
+        value
+      }
+    })
+    return createTransaction
+    
   }
  
   async findTransactionById(id: string){
-      const findById = await prisma.transaction.findUnique({
+      const findById = await prisma.tb_transactions.findUnique({
         where: {
           id
         }
@@ -30,7 +34,7 @@ export class PrismaTransactionRepository implements TransactionRepository{
   }
 
   async findAll() {
-    const allTransactions = await prisma.transaction.findMany();
+    const allTransactions = await prisma.tb_transactions.findMany();
     
     if(!allTransactions) null;
 

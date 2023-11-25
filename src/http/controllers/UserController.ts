@@ -5,15 +5,16 @@ export async function CreateUserController (request: FastifyRequest, reply: Fast
 
   const registerBodySchema = z.object({
     name: z.string(),
-    cpf: z.string()
+    cpf: z.string(),
+    value: z.number()
   });
-  const { name ,cpf } = registerBodySchema.parse(request.body);
+  const { name ,cpf,value } = registerBodySchema.parse(request.body);
 
   try{
 
     const createUserUseCase = makeCreateUserUseCase(); // Aqui, você precisa passar quaisquer dependências necessárias para o construtor do caso de uso, como repositórios, serviços, etc.
 
-    const newUser = await createUserUseCase.execute({ cpf, name})
+    const newUser = await createUserUseCase.execute({ cpf, name, value} )
     
     return reply.status(201).send(newUser)
   }catch(err){

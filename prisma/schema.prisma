@@ -10,16 +10,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model tb_users {
   id   String @id @default(uuid())
   name String
-  cpf  String
+  cpf  String @unique
+
+  bank   tb_bank @relation(fields: [bankId], references: [id])
+  bankId String  @default("bank-id-fixed")
+
+  transationFrom  tb_transactions[] @relation("From")
+  transactionTo   tb_transactions[] @relation("To")
+  tb_account_bank tb_account_bank[]
 }
 
-model Transaction {
+model tb_transactions {
   id        String   @id @default(uuid())
-  from      String
-  to        String
+  from      tb_users @relation("From", fields: [fromId], references: [cpf])
+  fromId    String
+  to        tb_users @relation("To", fields: [toId], references: [cpf])
+  toId      String
   value     Int
   timestamp DateTime @default(now())
+
+  bank   tb_bank @relation(fields: [bankId], references: [id])
+  bankId String  @default("bank-id-fixed")
+}
+
+model tb_account_bank {
+  id    String @id @default(uuid())
+  value Int
+
+  user   tb_users @relation(fields: [userId], references: [id])
+  userId String   @default("bank-id-fixed")
+}
+
+model tb_bank {
+  id          String            @id @default("bank-id-fixed")
+  user        tb_users[]
+  transaction tb_transactions[]
 }
